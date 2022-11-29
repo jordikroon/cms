@@ -44,7 +44,7 @@ abstract class Migration extends \yii\db\Migration
     public function up(bool $throwExceptions = false): bool
     {
         // Copied from \yii\db\Migration::up(), but with added $e param
-        $transaction = $this->db->beginTransaction();
+        $transaction = $this->getDb()->beginTransaction();
         try {
             if ($this->safeUp() === false) {
                 $transaction->rollBack();
@@ -77,7 +77,7 @@ abstract class Migration extends \yii\db\Migration
     public function down(bool $throwExceptions = false): bool
     {
         // Copied from \yii\db\Migration::down(), but with added $e param
-        $transaction = $this->db->beginTransaction();
+        $transaction = $this->getDb()->beginTransaction();
         try {
             if ($this->safeDown() === false) {
                 $transaction->rollBack();
@@ -112,7 +112,7 @@ abstract class Migration extends \yii\db\Migration
     public function tinyText(): ColumnSchemaBuilder
     {
         if (Db::isTypeSupported('tinytext', $this->db)) {
-            return $this->db->getSchema()->createColumnSchemaBuilder('tinytext');
+            return $this->getDb()->getSchema()->createColumnSchemaBuilder('tinytext');
         }
 
         return $this->text();
@@ -126,7 +126,7 @@ abstract class Migration extends \yii\db\Migration
     public function mediumText(): ColumnSchemaBuilder
     {
         if (Db::isTypeSupported('mediumtext', $this->db)) {
-            return $this->db->getSchema()->createColumnSchemaBuilder('mediumtext');
+            return $this->getDb()->getSchema()->createColumnSchemaBuilder('mediumtext');
         }
 
         return $this->text();
@@ -140,7 +140,7 @@ abstract class Migration extends \yii\db\Migration
     public function longText(): ColumnSchemaBuilder
     {
         if (Db::isTypeSupported('longtext', $this->db)) {
-            return $this->db->getSchema()->createColumnSchemaBuilder('longtext');
+            return $this->getDb()->getSchema()->createColumnSchemaBuilder('longtext');
         }
 
         return $this->text();
@@ -156,7 +156,7 @@ abstract class Migration extends \yii\db\Migration
     public function enum(string $columnName, array $values): ColumnSchemaBuilder
     {
         if (Db::isTypeSupported('enum', $this->db)) {
-            return $this->db->getSchema()->createColumnSchemaBuilder('enum', $values);
+            return $this->getDb()->getSchema()->createColumnSchemaBuilder('enum', $values);
         }
 
         $check = "[[$columnName]] in (";
@@ -164,7 +164,7 @@ abstract class Migration extends \yii\db\Migration
             if ($i != 0) {
                 $check .= ',';
             }
-            $check .= $this->db->quoteValue($value);
+            $check .= $this->getDb()->quoteValue($value);
         }
         $check .= ')';
 
